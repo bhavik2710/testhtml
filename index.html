@@ -1,40 +1,19 @@
-<!DOCTYPE html>
-<html>
-<head><title>Click Me</title></head>
-<body style="text-align: center; padding-top: 50px;">
-  <h2>Tap the image to share your location</h2>
-  <a href="#" onclick="sendLocation()">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/e/ec/RedDot.svg" alt="Click here" width="200" style="cursor:pointer;">
-  </a>
+<a href="#" onclick="sendMail()">Send location by Email</a>
 
-  <script>
-    function sendLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-
-          fetch("https://script.google.com/macros/library/d/1R20jC-JfTIrNaFWARnyAVoLV1z5wb8-OidEqHwbcWj1tKanyGvQfP3a0/3", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ latitude, longitude })
-          })
-          .then(res => res.text())
-          .then(msg => {
-            alert("Thanks! Location sent.");
-          })
-          .catch(err => {
-            alert("Error sending location: " + err);
-          });
-        }, function(error) {
-          alert("Location permission denied or unavailable.");
-        });
-      } else {
-        alert("Geolocation not supported.");
-      }
-    }
-  </script>
-</body>
-</html>
+<script>
+function sendMail() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      const subject = encodeURIComponent("My Location");
+      const body = encodeURIComponent(`Latitude: ${latitude}\nLongitude: ${longitude}\nGoogle Maps: https://maps.google.com/?q=${latitude},${longitude}`);
+      window.location.href = `mailto:cbhavik98@email.com?subject=${subject}&body=${body}`;
+    }, function() {
+      alert("Location permission denied or unavailable.");
+    });
+  } else {
+    alert("Geolocation not supported.");
+  }
+}
+</script>
