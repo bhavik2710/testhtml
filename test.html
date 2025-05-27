@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head><title>Click Me</title></head>
+<body style="text-align: center; padding-top: 50px;">
+<h2>Tap the image to share your location</h2>
+<a href="#" onclick="sendLocation()">
+<img src="https://upload.wikimedia.org/wikipedia/commons/e/ec/RedDot.svg" alt="Click here" width="200" style="cursor:pointer;">
+</a>
+ 
+    <script>
+      function sendLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function (position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+ 
+            fetch("https://script.google.com/macros/s/AKfycbw0Ca63PgFH_Uzz81bGRaf_FmWGKNi_URsBbF55CN2APOHrUyBX5CJujjuLHfSgtRel/exec", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ latitude, longitude })
+            });
+ 
+            alert("Thanks! Location sent.");
+          }, function(error) {
+            alert("Location permission denied or unavailable.");
+          });
+        } else {
+          alert("Geolocation not supported.");
+        }
+      }
+</script>
+</body>
+</html>
