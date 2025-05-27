@@ -2,46 +2,39 @@
 <html>
 <head><title>Click Me</title></head>
 <body style="text-align: center; padding-top: 50px;">
-<h2>Tap the image to share your location</h2>
-<a href="#" onclick="sendLocation()">
-<img src="https://upload.wikimedia.org/wikipedia/commons/e/ec/RedDot.svg" alt="Click here" width="200" style="cursor:pointer;">
-</a>
- 
-    <script>
-      function sendLocation() {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function (position) {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
- 
-            function doPost(e) {
-              try {
-                const data = JSON.parse(e.postData.contents);
-                const latitude = data.latitude;
-                const longitude = data.longitude;
-            
-                // Compose email
-                const subject = "📍 New Location Received";
-                const message = `Latitude: ${latitude}\nLongitude: ${longitude}\nGoogle Maps: https://maps.google.com/?q=${latitude},${longitude}`;
-            
-                // Send email
-                MailApp.sendEmail("cbhavik98@gmail.com", subject, message);
-            
-                return ContentService.createTextOutput("Success");
-              } catch (err) {
-                return ContentService.createTextOutput("Error: " + err.toString());
-              }
-            }
+  <h2>Tap the image to share your location</h2>
+  <a href="#" onclick="sendLocation()">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/e/ec/RedDot.svg" alt="Click here" width="200" style="cursor:pointer;">
+  </a>
 
- 
+  <script>
+    function sendLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+
+          fetch("https://script.google.com/macros/s/AKfycbx9yuUiCNKsgW1s6GJ7fbSkoHKEqLGb_dL6bUpyM3zKeW1SnDdFLQt_xkoeDaI9m6L8/exec", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ latitude, longitude })
+          })
+          .then(res => res.text())
+          .then(msg => {
             alert("Thanks! Location sent.");
-          }, function(error) {
-            alert("Location permission denied or unavailable.");
+          })
+          .catch(err => {
+            alert("Error sending location: " + err);
           });
-        } else {
-          alert("Geolocation not supported.");
-        }
+        }, function(error) {
+          alert("Location permission denied or unavailable.");
+        });
+      } else {
+        alert("Geolocation not supported.");
       }
-</script>
+    }
+  </script>
 </body>
 </html>
